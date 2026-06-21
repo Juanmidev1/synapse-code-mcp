@@ -5,9 +5,9 @@
 [![Node ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 [![Tests: 245](https://img.shields.io/badge/tests-245%20passing-brightgreen)](#development)
 
-> A semantic code context server that connects your local repository to AI assistants via the [Model Context Protocol](https://modelcontextprotocol.io).
+> A structural code context server that connects your local repository to AI assistants via the [Model Context Protocol](https://modelcontextprotocol.io).
 
-Instead of copy-pasting files into a prompt, Synapse lets your AI assistant dynamically explore your codebase — pulling only the code it needs, when it needs it. The result: less context waste, smarter answers, and a workflow that scales to large projects.
+Instead of copy-pasting files into a prompt, Synapse lets your AI assistant dynamically explore your codebase — pulling only the code it needs, when it needs it. The result: less context waste, smarter answers, and a workflow that scales to large projects — with no vector database or embedding API to set up.
 
 ```
 AI Assistant  ──MCP──►  Synapse MCP  ──fs/git──►  Your Repository
@@ -30,6 +30,19 @@ Most AI coding tools already index files. Synapse solves a different problem: **
 | Dependency rabbit holes filling the context window | Configurable `depth` cap on import traversal |
 
 The compression ratios above are enforced as automated test budgets — not marketing estimates.
+
+### Why not vector embeddings?
+
+Most code-context MCP servers use semantic search backed by a vector database (e.g. Milvus, Qdrant) and an embedding API (OpenAI, VoyageAI). That gives them a real capability Synapse doesn't have: finding code by conceptual meaning ("find the authentication logic") rather than by structure or text.
+
+Synapse trades that capability for a different set of properties:
+
+- **Zero external dependencies** — no API keys, no vector database, no embedding provider to configure
+- **Zero recurring cost** — no per-token embedding charges, no hosted database bill
+- **Fully local and deterministic** — the same input always produces the same output, nothing leaves your machine, nothing to index ahead of time
+- **Instant on any repo** — no indexing step before first use (see [Performance](#performance): 120–257 ms on real repos)
+
+If you need natural-language semantic search across millions of lines in many languages, a vector-backed server is the better tool. If you want structural context (signatures, dependency graphs, diffs) without standing up infrastructure, Synapse is built for that.
 
 ---
 
