@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/logo-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/logo-light.png">
+    <img alt="Synapse MCP" src="docs/logo-light.png" width="500">
+  </picture>
+</p>
+
 # Synapse MCP
 
 [![CI](https://github.com/Eltortilla1/synapse-code-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Eltortilla1/synapse-code-mcp/actions/workflows/ci.yml)
