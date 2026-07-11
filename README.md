@@ -8,7 +8,7 @@
 
 # Synapse MCP
 
-[![CI](https://github.com/Eltortilla1/synapse-code-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Eltortilla1/synapse-code-mcp/actions/workflows/ci.yml)
+[![CI](https://github.com/Juanmidev1/synapse-code-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Juanmidev1/synapse-code-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 [![Tests: 251](https://img.shields.io/badge/tests-251%20passing-brightgreen)](#development)
@@ -357,7 +357,7 @@ Synapse is a **read-only** server. It never writes to the filesystem or modifies
 ## Development
 
 ```bash
-git clone https://github.com/Eltortilla1/synapse-code-mcp.git
+git clone https://github.com/Juanmidev1/synapse-code-mcp.git
 cd synapse-code-mcp
 npm install
 
@@ -415,7 +415,7 @@ This project is in active early development. Bug reports, feature requests, and 
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — community standards (Contributor Covenant 2.1)
 - [ROADMAP.md](ROADMAP.md) — what is planned and what is open for community PRs
 
-New to the project? Browse issues tagged [`good first issue`](https://github.com/Eltortilla1/synapse-code-mcp/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) for the best entry points.
+New to the project? Browse issues tagged [`good first issue`](https://github.com/Juanmidev1/synapse-code-mcp/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) for the best entry points.
 
 ---
 

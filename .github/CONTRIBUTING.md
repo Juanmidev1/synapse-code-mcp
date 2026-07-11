@@ -19,7 +19,7 @@ Thank you for taking the time to contribute! This guide covers everything you ne
 ## 1. Setting up the local environment
 
 ```bash
-git clone https://github.com/Eltortilla1/synapse-code-mcp.git
+git clone https://github.com/Juanmidev1/synapse-code-mcp.git
 cd synapse-mcp
 npm install
 

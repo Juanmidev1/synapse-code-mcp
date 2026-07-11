@@ -8,7 +8,7 @@ For a detailed history of shipped changes, see [CHANGELOG.md](CHANGELOG.md).
 
 ## In progress
 
-Nothing active right now. Check the [open issues](https://github.com/Eltortilla1/synapse-code-mcp/issues) for work that may be under way.
+Nothing active right now. Check the [open issues](https://github.com/Juanmidev1/synapse-code-mcp/issues) for work that may be under way.
 
 ---
 

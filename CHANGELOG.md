@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.4.0...HEAD
 
 ---
 
@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `tests/fixtures` excluded from TypeScript compilation and ESLint to prevent false errors from fixture files that intentionally lack the project's `tsconfig.json` settings.
 
-[0.4.0]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.3.0...v0.4.0
+[0.4.0]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.3.0...v0.4.0
 
 ---
 
@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`get_semantic_context` — `output_format` parameter** — add `output_format: "json"` to receive the raw `SemanticContext` object (entry file, dependencies, stats) as structured JSON instead of the default Markdown text. Useful for programmatic post-processing. Default (`"markdown"`) is unchanged.
 
-[0.3.0]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.2.0...v0.3.0
+[0.3.0]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.2.0...v0.3.0
 
 ---
 
@@ -61,5 +61,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated benchmark suite (`tests/performance/`) with time and heap budgets enforced in CI.
 - Structured logging via [pino](https://getpino.io).
 
-[0.2.0]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/Eltortilla1/synapse-code-mcp/releases/tag/v0.1.0
+[0.2.0]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/Juanmidev1/synapse-code-mcp/releases/tag/v0.1.0

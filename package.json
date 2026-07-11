@@ -35,11 +35,11 @@
     "semantic",
     "claude"
   ],
-  "author": "Eltortilla1",
+  "author": "Juanmidev1",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Eltortilla1/synapse-code-mcp.git"
+    "url": "https://github.com/Juanmidev1/synapse-code-mcp.git"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.0",
