@@ -11,7 +11,7 @@
 [![CI](https://github.com/Eltortilla1/synapse-code-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Eltortilla1/synapse-code-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
-[![Tests: 245](https://img.shields.io/badge/tests-245%20passing-brightgreen)](#development)
+[![Tests: 249](https://img.shields.io/badge/tests-249%20passing-brightgreen)](#development)
 
 > A structural code context server that connects your local repository to AI assistants via the [Model Context Protocol](https://modelcontextprotocol.io).
 
@@ -104,7 +104,7 @@ Returns a file's content alongside its local dependency graph — everything the
 
 Add `outline_only: true` to get signatures without implementation bodies. Output is enforced by the benchmark suite to be ≤ 50% of full content length, while preserving full structural understanding.
 
-**Parameters:** `file_path` (required), `depth` (import hops, default: 2), `outline_only`
+**Parameters:** `file_path` (required), `depth` (import hops, default: 2), `outline_only`, `output_format` (`"markdown"` default · `"json"` for structured output)
 
 ---
 

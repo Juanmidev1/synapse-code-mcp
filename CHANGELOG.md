@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.3.0...HEAD
+
+---
+
+## [0.3.0] — 2026-07-11
+
+### Added
+
+- **`get_semantic_context` — `output_format` parameter** — add `output_format: "json"` to receive the raw `SemanticContext` object (entry file, dependencies, stats) as structured JSON instead of the default Markdown text. Useful for programmatic post-processing. Default (`"markdown"`) is unchanged.
+
+[0.3.0]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.2.0...v0.3.0
 
 ---
 

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { handleGetSemanticContext } from '../../src/tools/get-semantic-context.js';
 import { loadConfig } from '../../src/config/index.js';
 import { PathEscapeError, FileNotFoundError } from '../../src/utils/errors.js';
+import type { SemanticContext } from '../../src/types/context.js';
 
 const FIXTURE_ROOT = path.resolve('tests/fixtures/integration-project');
 const config = loadConfig({ root: FIXTURE_ROOT });
@@ -230,5 +231,25 @@ describe('Integration: get_semantic_context — security and error handling', ()
       config,
     );
     expect(result).toContain('interface User');
+  });
+});
+
+describe('Integration: get_semantic_context — output_format', () => {
+  it('returns valid JSON when output_format is "json"', async () => {
+    const result = await handleGetSemanticContext(
+      { file_path: 'src/app.ts', output_format: 'json' },
+      config,
+    );
+    const parsed = JSON.parse(result) as SemanticContext;
+    expect(parsed).toHaveProperty('entryFile');
+    expect(parsed).toHaveProperty('dependencies');
+    expect(parsed).toHaveProperty('stats');
+    expect(parsed.entryFile.relativePath).toBe('src/app.ts');
+  });
+
+  it('returns markdown by default when output_format is omitted', async () => {
+    const result = await handleGetSemanticContext({ file_path: 'src/app.ts' }, config);
+    expect(result).toMatch(/^#\s+/m);
+    expect(() => { JSON.parse(result); }).toThrow();
   });
 });

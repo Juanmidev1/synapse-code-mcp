@@ -19,6 +19,12 @@ export const GetSemanticContextSchema = z.object({
     .describe(
       'Return function/class/interface signatures without implementation bodies. Reduces tokens by 70–90%. Default: false.',
     ),
+  output_format: z
+    .enum(['markdown', 'json'])
+    .optional()
+    .describe(
+      'Output format. "markdown" (default) returns a human-readable structured text. "json" returns the raw SemanticContext object.',
+    ),
 });
 
 export type GetSemanticContextInput = z.infer<typeof GetSemanticContextSchema>;
@@ -41,6 +47,10 @@ export async function handleGetSemanticContext(
     maxFileSize: config.maxFileSize,
     outlineOnly,
   });
+
+  if ((input.output_format ?? 'markdown') === 'json') {
+    return JSON.stringify(ctx, null, 2);
+  }
 
   const parts: string[] = [];
   const modeLabel = outlineOnly ? ' [outline mode]' : '';
