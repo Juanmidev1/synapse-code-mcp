@@ -9,7 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.4.0...HEAD
+
+---
+
+## [0.4.0] — 2026-07-11
+
+### Added
+
+- **Path alias resolution in dependency graph** — `get_semantic_context` and `get_project_index` now follow `tsconfig.json` `compilerOptions.paths` aliases (e.g. `@/utils/foo`, `@components/Bar`) when building the dependency graph. Previously, non-relative imports were silently skipped even when a `tsconfig.json` was present and ts-morph could resolve them. Projects without a `tsconfig.json` continue to use relative-only resolution.
+
+### Fixed
+
+- `tests/fixtures` excluded from TypeScript compilation and ESLint to prevent false errors from fixture files that intentionally lack the project's `tsconfig.json` settings.
+
+[0.4.0]: https://github.com/Eltortilla1/synapse-code-mcp/compare/v0.3.0...v0.4.0
 
 ---
 

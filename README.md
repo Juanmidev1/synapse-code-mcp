@@ -11,7 +11,7 @@
 [![CI](https://github.com/Eltortilla1/synapse-code-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Eltortilla1/synapse-code-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
-[![Tests: 249](https://img.shields.io/badge/tests-249%20passing-brightgreen)](#development)
+[![Tests: 251](https://img.shields.io/badge/tests-251%20passing-brightgreen)](#development)
 
 > A structural code context server that connects your local repository to AI assistants via the [Model Context Protocol](https://modelcontextprotocol.io).
 
@@ -158,7 +158,7 @@ Synapse uses [ts-morph](https://ts-morph.com) (TypeScript compiler API) for deep
 
 Dependency graph traversal (following `import`/`require` chains) is TypeScript/JavaScript only. For all other languages, Synapse still reads and searches files normally — it just won't walk the import graph.
 
-> **Limitation:** dependency graph traversal only follows *relative* imports (`./foo`, `../bar`). Path aliases configured via `tsconfig.json` `paths` (e.g. `@/components/Foo`) are not resolved and will be silently skipped — the dependency graph will be incomplete for projects that rely heavily on aliased imports. Support for resolving aliases is tracked in the [roadmap](ROADMAP.md).
+> **Note:** dependency graph traversal follows both *relative* imports (`./foo`, `../bar`) and *path aliases* configured via `tsconfig.json` `compilerOptions.paths` (e.g. `@/components/Foo`), as long as a `tsconfig.json` is present at the project root. Projects without a `tsconfig.json` fall back to relative-only resolution.
 
 ---
 

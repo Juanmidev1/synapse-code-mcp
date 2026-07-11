@@ -23,14 +23,11 @@ export function resolveImports(filePath: string, projectRoot: string): Dependenc
   const seen = new Set<string>();
 
   for (const decl of sourceFile.getImportDeclarations()) {
-    const moduleSpecifier = decl.getModuleSpecifierValue();
-
-    if (!moduleSpecifier.startsWith('.')) continue;
-
     const resolved = decl.getModuleSpecifierSourceFile();
     if (!resolved) continue;
 
     const resolvedPath = resolved.getFilePath();
+    if (!resolvedPath.startsWith(projectRoot)) continue; // node_modules or outside root
     if (seen.has(resolvedPath)) continue;
     seen.add(resolvedPath);
 
