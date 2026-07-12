@@ -95,6 +95,7 @@ export async function handleGetChangedFiles(
 
   if (input.include_diff) {
     const diff = getFullDiff(config.root, baseRef);
+    // NOTE: intentionally not yet scoped by file_pattern — see Bug 3 fix in v0.5.2.
     if (diff) {
       parts.push('\n---\n');
       parts.push('```diff');

@@ -6,6 +6,7 @@ import {
   resolveAndValidate,
   toRelative,
   detectLanguage,
+  validateGlobPattern,
 } from '../../src/utils/path-utils.js';
 import { PathEscapeError } from '../../src/utils/errors.js';
 
@@ -81,6 +82,36 @@ describe('resolveAndValidate — symlink escape', () => {
   it('returns ENOENT path (no throw) for a non-existent path inside root', () => {
     const result = resolveAndValidate(tmpRoot, 'does-not-exist.ts');
     expect(result).toContain(tmpRoot);
+  });
+});
+
+describe('validateGlobPattern', () => {
+  it('throws PathEscapeError for a pattern escaping root with ..', () => {
+    expect(() => validateGlobPattern(ROOT, '../etc/passwd')).toThrow(PathEscapeError);
+  });
+
+  it('throws PathEscapeError for a deeply nested traversal glob', () => {
+    expect(() => validateGlobPattern(ROOT, '../../../../etc/*')).toThrow(PathEscapeError);
+  });
+
+  it('throws PathEscapeError for traversal combined with a wildcard tail', () => {
+    expect(() => validateGlobPattern(ROOT, '../outside/**/*.ts')).toThrow(PathEscapeError);
+  });
+
+  it('throws PathEscapeError for a pattern containing a null byte', () => {
+    expect(() => validateGlobPattern(ROOT, 'src/\0/*.ts')).toThrow(PathEscapeError);
+  });
+
+  it('does not throw for a pattern scoped inside root', () => {
+    expect(() => validateGlobPattern(ROOT, 'src/**/*.ts')).not.toThrow();
+  });
+
+  it('does not throw for a simple extension glob', () => {
+    expect(() => validateGlobPattern(ROOT, '*.md')).not.toThrow();
+  });
+
+  it('does not throw for "."', () => {
+    expect(() => validateGlobPattern(ROOT, '.')).not.toThrow();
   });
 });
 

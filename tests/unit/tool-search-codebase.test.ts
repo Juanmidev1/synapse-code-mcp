@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import { handleSearchCodebase } from '../../src/tools/search-codebase.js';
 import { loadConfig } from '../../src/config/index.js';
+import { PathEscapeError } from '../../src/utils/errors.js';
 
 const FIXTURE_ROOT = path.resolve('tests/fixtures/simple-ts-project');
 const config = loadConfig({ root: FIXTURE_ROOT });
@@ -49,5 +50,17 @@ describe('handleSearchCodebase', () => {
   it('supports regex queries', async () => {
     const result = await handleSearchCodebase({ query: 'gr[e]+t', is_regex: true }, config);
     expect(result).toContain('greet');
+  });
+
+  it('rejects a file_pattern that escapes the project root', async () => {
+    await expect(
+      handleSearchCodebase({ query: 'greet', file_pattern: '../../../../etc/passwd' }, config),
+    ).rejects.toThrow(PathEscapeError);
+  });
+
+  it('rejects a file_pattern with traversal and a wildcard tail', async () => {
+    await expect(
+      handleSearchCodebase({ query: 'greet', file_pattern: '../../outside/**' }, config),
+    ).rejects.toThrow(PathEscapeError);
   });
 });

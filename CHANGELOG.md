@@ -9,7 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.1...HEAD
+
+---
+
+## [0.5.1] — 2026-07-12
+
+### Security
+
+- **Command injection in `get_changed_files`** — `base_ref` was interpolated unescaped into a shell command, allowing arbitrary command execution on the host running Synapse. Git commands now run via `execFileSync` with argument arrays, never through a shell.
+- **Path traversal via `file_pattern`** — `search_codebase` and `get_project_index` did not validate that `file_pattern` stayed inside the project root, allowing a crafted pattern (e.g. `../../../../etc/passwd`) to read or index files outside the served directory. Both tools now validate `file_pattern` against the project root before it reaches the glob/search engine.
+- Removed an unused, independently vulnerable synchronous search function in the ripgrep adapter (dead code, never called in production, but relied on unescaped shell string construction).
+
+[0.5.1]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.0...v0.5.1
 
 ---
 

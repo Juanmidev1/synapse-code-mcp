@@ -32,24 +32,6 @@ export interface SearchParams {
   ig?: import('ignore').Ignore;
 }
 
-export function search(params: SearchParams): SearchMatch[] {
-  const args = ['--json', '--line-number', '--column'];
-
-  if (!params.caseSensitive) args.push('--ignore-case');
-  if (!params.isRegex) args.push('--fixed-strings');
-  if (params.filePattern) args.push('--glob', params.filePattern);
-
-  args.push('--max-count', String(params.maxResults));
-  args.push(params.query, params.root);
-
-  const output = execSync(`rg ${args.map((a) => JSON.stringify(a)).join(' ')}`, {
-    maxBuffer: 50 * 1024 * 1024,
-    encoding: 'utf-8',
-  });
-
-  return parseRipgrepOutput(output, params.root);
-}
-
 function parseRipgrepOutput(output: string, root: string): SearchMatch[] {
   const matches: SearchMatch[] = [];
 
