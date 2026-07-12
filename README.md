@@ -390,7 +390,7 @@ src/
   core/
     fs/                 File tree building, file reading, ignore resolution
     search/             ripgrep adapter + pure-Node fallback
-    analysis/           Dependency graph (ts-morph), outline extractor, project indexer
+    analysis/           Dependency graph (ts-morph), outline extractor, project indexer, index cache
     git/                Git adapter (diff, changed files)
   config/               Config loading and Zod validation
   types/                Shared TypeScript interfaces

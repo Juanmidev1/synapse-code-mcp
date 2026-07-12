@@ -18,10 +18,6 @@ Nothing active right now. Check the [open issues](https://github.com/Juanmidev1/
 
 The current Python analysis uses regex heuristics to extract function and class names. The plan is to replace this with a proper [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar so that `get_semantic_context` and `get_project_index` can return full signatures, decorators, and type annotations — the same depth of analysis currently available for TypeScript.
 
-### Incremental index cache
-
-Today, `get_project_index` re-analyzes all files on every call. The plan is to introduce a file-hash-based cache: each file's symbol map is stored on disk and only recomputed when the file's content hash changes. This would make repeated calls on large projects effectively instant.
-
 ### Multi-root support
 
 Running one Synapse instance per project works but is wasteful when an AI assistant needs to reason across multiple repositories simultaneously. The plan is to allow a single server instance to serve multiple roots, each scoped and isolated, addressable via a `root` parameter on each tool call.
