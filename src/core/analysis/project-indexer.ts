@@ -2,7 +2,8 @@ import path from 'node:path';
 import fg from 'fast-glob';
 import { SymbolSignature } from '../../types/context.js';
 import { SynapseConfig } from '../../types/config.js';
-import { extractOutline } from './outline-extractor.js';
+import { toRelative } from '../../utils/path-utils.js';
+import { CacheStore, getCachedOutline, loadCacheStore, pruneAndSave } from './index-cache.js';
 
 export interface FileIndex {
   relativePath: string;
@@ -36,6 +37,7 @@ const IGNORE_PATTERNS = [
   '**/*.min.css',
   '**/*.map',
   '**/coverage/**',
+  '**/.synapse-cache/**',
 ];
 
 const CONCURRENCY = 8;
@@ -57,12 +59,13 @@ export async function buildProjectIndex(
   });
 
   const fileIndexes: FileIndex[] = [];
+  const store = loadCacheStore(root, config);
 
   // Process files in batches to avoid overwhelming the event loop
   for (let i = 0; i < files.length; i += CONCURRENCY) {
     const batch = files.slice(i, i + CONCURRENCY);
     const results = await Promise.all(
-      batch.map((filePath) => indexFile(filePath, root, config, opts?.includeNonExported ?? false)),
+      batch.map((filePath) => indexFile(filePath, root, config, opts?.includeNonExported ?? false, store)),
     );
     for (const result of results) {
       if (result !== null) fileIndexes.push(result);
@@ -70,6 +73,8 @@ export async function buildProjectIndex(
   }
 
   fileIndexes.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+
+  pruneAndSave(root, config, store, new Set(files.map((f) => toRelative(root, f))));
 
   return {
     root,
@@ -84,6 +89,7 @@ async function indexFile(
   root: string,
   config: SynapseConfig,
   includeNonExported: boolean,
+  store: CacheStore,
 ): Promise<FileIndex | null> {
   try {
     const stat = await import('node:fs/promises').then((m) => m.stat(absPath));
@@ -93,7 +99,7 @@ async function indexFile(
   }
 
   try {
-    const outline = extractOutline(absPath, root);
+    const outline = getCachedOutline(absPath, root, config, store);
     const symbols = includeNonExported
       ? outline.symbols
       : outline.symbols.filter(

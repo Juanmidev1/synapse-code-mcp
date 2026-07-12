@@ -10,6 +10,7 @@ export const SynapseConfigSchema = z.object({
   logLevel: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   serverName: z.string().default('synapse-code-mcp'),
   serverVersion: z.string().default('0.1.0'),
+  cacheEnabled: z.boolean().default(true),
 });
 
 export type SynapseConfigInput = z.input<typeof SynapseConfigSchema>;

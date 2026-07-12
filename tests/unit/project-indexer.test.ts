@@ -1,10 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterAll } from 'vitest';
 import path from 'node:path';
+import fs from 'node:fs';
+import os from 'node:os';
 import { buildProjectIndex } from '../../src/core/analysis/project-indexer.js';
 import { loadConfig } from '../../src/config/index.js';
 
 const FIXTURE_ROOT = path.resolve('tests/fixtures/integration-project');
-const config = loadConfig({ root: FIXTURE_ROOT });
+const config = loadConfig({ root: FIXTURE_ROOT, cacheEnabled: false });
 
 describe('buildProjectIndex — integration-project fixture', () => {
   it('returns a non-empty index', async () => {
@@ -83,5 +85,31 @@ describe('buildProjectIndex — integration-project fixture', () => {
       const topLevel = file.symbols.filter((s) => s.kind !== 'method' && s.kind !== 'variable');
       expect(topLevel.every((s) => s.exported)).toBe(true);
     }
+  });
+});
+
+describe('buildProjectIndex — incremental index cache', () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'synapse-cache-test-'));
+  fs.cpSync(FIXTURE_ROOT, tmpRoot, { recursive: true });
+  const cachedConfig = loadConfig({ root: tmpRoot, cacheEnabled: true });
+
+  afterAll(() => {
+    fs.rmSync(tmpRoot, { recursive: true, force: true });
+  });
+
+  it('creates .synapse-cache/index.json and returns identical results on repeat calls', async () => {
+    const first = await buildProjectIndex(tmpRoot, cachedConfig);
+    const cacheFile = path.join(tmpRoot, '.synapse-cache', 'index.json');
+    expect(fs.existsSync(cacheFile)).toBe(true);
+
+    const second = await buildProjectIndex(tmpRoot, cachedConfig);
+    expect(second.totalFiles).toBe(first.totalFiles);
+    expect(second.totalSymbols).toBe(first.totalSymbols);
+    expect(second.files).toEqual(first.files);
+  });
+
+  it('excludes .synapse-cache from the indexed files', async () => {
+    const index = await buildProjectIndex(tmpRoot, cachedConfig);
+    expect(index.files.some((f) => f.relativePath.includes('.synapse-cache'))).toBe(false);
   });
 });

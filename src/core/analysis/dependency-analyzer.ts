@@ -2,7 +2,7 @@ import path from 'node:path';
 import { DependencyEdge, FileContent, SemanticContext } from '../../types/context.js';
 import { readFile } from '../fs/file-reader.js';
 import { detectLanguage, toRelative } from '../../utils/path-utils.js';
-import { extractOutline } from './outline-extractor.js';
+import { CacheStore, getCachedOutline, loadCacheStore, saveCacheStore } from './index-cache.js';
 import * as tsResolver from './ts-resolver.js';
 import * as genericResolver from './generic-resolver.js';
 
@@ -12,6 +12,7 @@ interface AnalyzeOptions {
   maxDepth: number;
   maxFileSize: number;
   outlineOnly?: boolean;
+  cacheEnabled: boolean;
 }
 
 function isTypeScript(filePath: string): boolean {
@@ -42,6 +43,8 @@ function buildFileContent(
   lines: number,
   root: string,
   outlineOnly: boolean,
+  cacheEnabled: boolean,
+  store: CacheStore,
 ): FileContent {
   const base = {
     path: filePath,
@@ -51,7 +54,7 @@ function buildFileContent(
   };
 
   if (outlineOnly) {
-    return { ...base, content: '', outline: extractOutline(filePath, root) };
+    return { ...base, content: '', outline: getCachedOutline(filePath, root, { cacheEnabled }, store) };
   }
   return { ...base, content };
 }
@@ -61,6 +64,8 @@ export function analyze(opts: AnalyzeOptions): SemanticContext {
   const visited = new Map<string, FileContent & { importedBy: string; depth: number }>();
   const externalDeps = new Set<string>();
 
+  const store = loadCacheStore(opts.root, { cacheEnabled: opts.cacheEnabled });
+
   const entryRead = readFile(opts.filePath, opts.maxFileSize);
   const entryFile: FileContent = buildFileContent(
     opts.filePath,
@@ -68,6 +73,8 @@ export function analyze(opts: AnalyzeOptions): SemanticContext {
     entryRead.lines,
     opts.root,
     outlineOnly,
+    opts.cacheEnabled,
+    store,
   );
 
   const queue: Array<{ filePath: string; importedBy: string; depth: number }> = [
@@ -88,7 +95,15 @@ export function analyze(opts: AnalyzeOptions): SemanticContext {
 
         if (!visited.has(item.filePath)) {
           visited.set(item.filePath, {
-            ...buildFileContent(item.filePath, r.content, r.lines, opts.root, outlineOnly),
+            ...buildFileContent(
+              item.filePath,
+              r.content,
+              r.lines,
+              opts.root,
+              outlineOnly,
+              opts.cacheEnabled,
+              store,
+            ),
             importedBy: item.importedBy,
             depth: item.depth,
           });
@@ -114,6 +129,8 @@ export function analyze(opts: AnalyzeOptions): SemanticContext {
 
   const dependencies = Array.from(visited.values());
   const totalLines = entryFile.lines + dependencies.reduce((acc, d) => acc + d.lines, 0);
+
+  saveCacheStore(opts.root, { cacheEnabled: opts.cacheEnabled }, store);
 
   return {
     entryFile,

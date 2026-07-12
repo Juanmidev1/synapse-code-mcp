@@ -29,6 +29,7 @@ export const DEFAULT_IGNORE_PATTERNS: string[] = [
   '*.min.js',
   '*.min.css',
   '*.map',
+  '.synapse-cache',
 ];
 
 export const DEFAULT_CONFIG: Omit<SynapseConfig, 'root' | 'serverVersion'> = {
@@ -39,4 +40,5 @@ export const DEFAULT_CONFIG: Omit<SynapseConfig, 'root' | 'serverVersion'> = {
   extraIgnorePatterns: [],
   logLevel: 'info',
   serverName: 'synapse-code-mcp',
+  cacheEnabled: true,
 };

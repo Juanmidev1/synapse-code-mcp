@@ -46,6 +46,7 @@ export async function handleGetSemanticContext(
     maxDepth: depth,
     maxFileSize: config.maxFileSize,
     outlineOnly,
+    cacheEnabled: config.cacheEnabled,
   });
 
   if ((input.output_format ?? 'markdown') === 'json') {
