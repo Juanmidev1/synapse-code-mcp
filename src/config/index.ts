@@ -13,6 +13,7 @@ interface CliArgs {
   maxDependencyDepth?: number;
   logLevel?: string;
   extraIgnorePatterns?: string[];
+  cacheEnabled?: boolean;
 }
 
 function readProjectConfigFile(root: string): Partial<Record<string, unknown>> {
@@ -69,6 +70,7 @@ export function loadConfig(cliArgs: CliArgs): SynapseConfig {
     ...(cliArgs.maxDependencyDepth !== undefined ? { maxDependencyDepth: cliArgs.maxDependencyDepth } : {}),
     ...(cliArgs.logLevel !== undefined ? { logLevel: cliArgs.logLevel } : {}),
     ...(cliArgs.extraIgnorePatterns !== undefined ? { extraIgnorePatterns: cliArgs.extraIgnorePatterns } : {}),
+    ...(cliArgs.cacheEnabled !== undefined ? { cacheEnabled: cliArgs.cacheEnabled } : {}),
     root,
     serverVersion,
   };

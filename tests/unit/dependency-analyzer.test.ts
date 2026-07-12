@@ -12,6 +12,7 @@ describe('dependency-analyzer', () => {
       root: FIXTURE_ROOT,
       maxDepth: 2,
       maxFileSize: 512 * 1024,
+      cacheEnabled: false,
     });
 
     expect(ctx.entryFile.relativePath).toBe(path.join('src', 'main.ts'));
@@ -27,6 +28,7 @@ describe('dependency-analyzer', () => {
       root: FIXTURE_ROOT,
       maxDepth: 2,
       maxFileSize: 512 * 1024,
+      cacheEnabled: false,
     });
 
     expect(ctx.stats.totalFiles).toBeGreaterThanOrEqual(1);

@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.0...HEAD
+
+---
+
+## [0.5.0] — 2026-07-12
+
+### Added
+
+- **Incremental index cache** — `get_project_index` and `get_semantic_context` now cache each file's extracted symbol outline on disk (`.synapse-cache/index.json`), keyed by content hash with a fast mtime/size pre-check. Unchanged files skip re-extraction entirely, making repeated calls on large projects significantly faster. Enabled by default; disable per-project via `"cacheEnabled": false` in `synapse.config.json`.
+
+[0.5.0]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.4.0...v0.5.0
 
 ---
 

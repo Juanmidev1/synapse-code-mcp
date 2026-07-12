@@ -15,6 +15,12 @@ describe('loadConfig', () => {
     expect(config.maxDependencyDepth).toBe(2);
     expect(config.logLevel).toBe('info');
     expect(config.serverName).toBe('synapse-code-mcp');
+    expect(config.cacheEnabled).toBe(true);
+  });
+
+  it('cacheEnabled can be overridden to false', () => {
+    const config = loadConfig({ root: FIXTURE_ROOT, cacheEnabled: false });
+    expect(config.cacheEnabled).toBe(false);
   });
 
   it('CLI args override defaults', () => {

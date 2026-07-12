@@ -8,4 +8,5 @@ export interface SynapseConfig {
   logLevel: 'debug' | 'info' | 'warn' | 'error';
   serverName: string;
   serverVersion: string;
+  cacheEnabled: boolean;
 }
