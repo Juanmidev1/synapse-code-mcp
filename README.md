@@ -11,7 +11,7 @@
 [![CI](https://github.com/Juanmidev1/synapse-code-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Juanmidev1/synapse-code-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
-[![Tests: 277](https://img.shields.io/badge/tests-277%20passing-brightgreen)](#development)
+[![Tests: 283](https://img.shields.io/badge/tests-283%20passing-brightgreen)](#development)
 
 > A structural code context server that connects your local repository to AI assistants via the [Model Context Protocol](https://modelcontextprotocol.io).
 

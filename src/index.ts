@@ -3,11 +3,12 @@ import { program } from 'commander';
 import { loadConfig } from './config/index.js';
 import { SynapseServer } from './server.js';
 import { ConfigError } from './utils/errors.js';
+import { getPackageVersion } from './utils/package-info.js';
 
 program
   .name('synapse-code-mcp')
   .description('MCP server that exposes local code repositories to AI assistants')
-  .version('0.1.0')
+  .version(getPackageVersion())
   .option('--root <path>', 'Project root directory to serve (default: current directory)')
   .option('--max-file-size <bytes>', 'Maximum file size to read in bytes', parseInt)
   .option('--max-search-results <n>', 'Maximum number of search results', parseInt)

@@ -9,7 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.2...HEAD
+
+---
+
+## [0.5.2] — 2026-07-12
+
+### Fixed
+
+- `get_changed_files` now scopes the full diff (`include_diff: true`) to the files matched by `file_pattern`, instead of dumping the diff for every changed file regardless of the filter.
+- `search_codebase` now surfaces an invalid regex as a clear `INVALID_REGEX` error instead of silently returning "No matches found," which could previously be mistaken for the pattern genuinely not existing in the codebase.
+- `get_project_tree` now returns a typed `FILE_NOT_FOUND` error for a nonexistent subdirectory instead of leaking a raw Node `ENOENT` message with the full absolute path.
+- The CLI `-V`/`--version` flag and the MCP `initialize` handshake's `serverInfo.version` now correctly report the installed package version. Previously both fell back to a hardcoded `0.1.0` under a global npm install, because version resolution followed the `bin` symlink's directory instead of its real target.
+
+[0.5.2]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.1...v0.5.2
 
 ---
 

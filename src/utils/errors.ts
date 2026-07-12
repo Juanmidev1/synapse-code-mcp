@@ -55,3 +55,10 @@ export class GitError extends SynapseError {
     this.name = 'GitError';
   }
 }
+
+export class InvalidRegexError extends SynapseError {
+  constructor(pattern: string, reason: string) {
+    super(`Invalid regex pattern "${pattern}": ${reason}`, 'INVALID_REGEX');
+    this.name = 'InvalidRegexError';
+  }
+}

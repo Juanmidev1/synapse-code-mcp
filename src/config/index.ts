@@ -4,6 +4,7 @@ import { SynapseConfig } from '../types/config.js';
 import { SynapseConfigSchema } from './schema.js';
 import { DEFAULT_CONFIG } from './defaults.js';
 import { ConfigError } from '../utils/errors.js';
+import { getPackageVersion } from '../utils/package-info.js';
 
 interface CliArgs {
   root?: string;
@@ -48,16 +49,7 @@ export function loadConfig(cliArgs: CliArgs): SynapseConfig {
   const projectConfig = readProjectConfigFile(root);
   const userConfig = readUserConfigFile();
 
-  const pkgPath = path.join(path.dirname(process.argv[1] ?? ''), '../package.json');
-  let serverVersion = '0.1.0';
-  if (fs.existsSync(pkgPath)) {
-    try {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as { version?: string };
-      serverVersion = pkg.version ?? serverVersion;
-    } catch {
-      // ignore
-    }
-  }
+  const serverVersion = getPackageVersion();
 
   const merged = {
     ...DEFAULT_CONFIG,

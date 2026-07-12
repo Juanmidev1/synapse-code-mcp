@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { SynapseConfig } from '../types/config.js';
 import { loadIgnore } from '../core/fs/ignore-resolver.js';
 import { buildTree, treeToText } from '../core/fs/tree-builder.js';
-import { resolveAndValidate } from '../utils/path-utils.js';
+import { resolveAndValidate, assertExists } from '../utils/path-utils.js';
 
 export const GetProjectTreeSchema = z.object({
   path: z.string().optional().describe('Subdirectory to list (relative to project root). Defaults to root.'),
@@ -22,6 +22,7 @@ export async function handleGetProjectTree(
   const showHidden = input.show_hidden ?? false;
 
   const subRoot = input.path ? resolveAndValidate(root, input.path) : root;
+  assertExists(subRoot);
   const ig = loadIgnore(root, config.extraIgnorePatterns);
   const result = buildTree({ root: subRoot, maxDepth, showHidden, ig });
 

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import { search } from '../../src/core/search/native-adapter.js';
+import { InvalidRegexError } from '../../src/utils/errors.js';
 
 const ROOT = path.resolve('tests/fixtures/simple-ts-project');
 
@@ -56,9 +57,10 @@ describe('native-adapter', () => {
     expect(matches.length).toBeGreaterThan(0);
   });
 
-  it('returns empty array for invalid regex', async () => {
-    const matches = await search({ root: ROOT, query: '[invalid', isRegex: true, caseSensitive: false, maxResults: 50 });
-    expect(matches).toHaveLength(0);
+  it('throws InvalidRegexError for an invalid regex instead of returning empty', async () => {
+    await expect(
+      search({ root: ROOT, query: '[invalid', isRegex: true, caseSensitive: false, maxResults: 50 }),
+    ).rejects.toThrow(InvalidRegexError);
   });
 
   it('restricts results to file_pattern glob', async () => {
