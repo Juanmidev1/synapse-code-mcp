@@ -3,6 +3,7 @@ import path from 'node:path';
 import fg from 'fast-glob';
 import { SearchMatch } from '../../types/search.js';
 import type { SearchParams } from './ripgrep-adapter.js';
+import { InvalidRegexError } from '../../utils/errors.js';
 
 export async function search(params: SearchParams): Promise<SearchMatch[]> {
   const pattern = params.filePattern
@@ -19,11 +20,11 @@ export async function search(params: SearchParams): Promise<SearchMatch[]> {
   const flags = params.caseSensitive ? 'g' : 'gi';
   let regex: RegExp;
 
+  const queryStr = params.isRegex ? params.query : escapeRegex(params.query);
   try {
-    const queryStr = params.isRegex ? params.query : escapeRegex(params.query);
     regex = new RegExp(queryStr, flags);
-  } catch {
-    return [];
+  } catch (err) {
+    throw new InvalidRegexError(queryStr, err instanceof Error ? err.message : 'malformed pattern');
   }
 
   const matches: SearchMatch[] = [];

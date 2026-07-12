@@ -107,6 +107,17 @@ describe('Integration: get_changed_files', () => {
     expect(result).toMatch(/\+/);
   });
 
+  it('include_diff=true combined with file_pattern scopes the diff body to matched files only', async () => {
+    const config = loadConfig({ root: repoDir });
+    const result = await handleGetChangedFiles(
+      { base_ref: 'HEAD~1', include_diff: true, file_pattern: 'index.ts' },
+      config,
+    );
+    expect(result).toContain('diff --git a/index.ts');
+    expect(result).not.toContain('diff --git a/new.ts');
+    expect(result).not.toContain('diff --git a/utils.ts');
+  });
+
   it('invalid base_ref throws GitError', async () => {
     const config = loadConfig({ root: repoDir });
     await expect(

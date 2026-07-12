@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import { handleSearchCodebase } from '../../src/tools/search-codebase.js';
 import { loadConfig } from '../../src/config/index.js';
-import { PathEscapeError } from '../../src/utils/errors.js';
+import { PathEscapeError, InvalidRegexError } from '../../src/utils/errors.js';
 
 const FIXTURE_ROOT = path.resolve('tests/fixtures/simple-ts-project');
 const config = loadConfig({ root: FIXTURE_ROOT });
@@ -62,5 +62,11 @@ describe('handleSearchCodebase', () => {
     await expect(
       handleSearchCodebase({ query: 'greet', file_pattern: '../../outside/**' }, config),
     ).rejects.toThrow(PathEscapeError);
+  });
+
+  it('rejects an invalid regex with a clear error instead of silently finding nothing', async () => {
+    await expect(
+      handleSearchCodebase({ query: '(unclosed[', is_regex: true }, config),
+    ).rejects.toThrow(InvalidRegexError);
   });
 });

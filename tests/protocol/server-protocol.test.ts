@@ -205,19 +205,19 @@ describe('Protocol: error handling', () => {
     expect(text).toMatch(/Error/i);
   });
 
-  it('search_codebase with invalid regex → graceful degradation, no crash', async () => {
-    // The native adapter silently returns [] on invalid regex rather than throwing,
-    // so the tool responds with "No matches found" — isError stays false.
-    // The important thing: the server does not crash and returns a usable response.
+  it('search_codebase with invalid regex → clear error, no crash', async () => {
+    // An invalid regex is a client error, not "no matches" — the server must
+    // surface it clearly (isError: true) rather than silently returning an
+    // empty result set. The important thing: the server does not crash and
+    // returns a usable, informative response either way.
     const result = await client.callTool({
       name: 'search_codebase',
       arguments: { query: '[unclosed', is_regex: true },
     });
 
-    expect(result.isError).toBeFalsy();
+    expect(result.isError).toBe(true);
     const text = firstText(result);
-    expect(typeof text).toBe('string');
-    expect(text.length).toBeGreaterThan(0);
+    expect(text).toMatch(/regex/i);
   });
 
   it('server does not crash after an error — subsequent call succeeds', async () => {

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import { handleGetProjectTree } from '../../src/tools/get-project-tree.js';
 import { loadConfig } from '../../src/config/index.js';
+import { FileNotFoundError } from '../../src/utils/errors.js';
 
 const FIXTURE_ROOT = path.resolve('tests/fixtures/simple-ts-project');
 const config = loadConfig({ root: FIXTURE_ROOT });
@@ -38,5 +39,11 @@ describe('handleGetProjectTree', () => {
   it('uses tree-style connectors (└── or ├──)', async () => {
     const result = await handleGetProjectTree({}, config);
     expect(result).toMatch(/[├└]──/);
+  });
+
+  it('throws a typed FileNotFoundError for a nonexistent subdirectory, not a raw ENOENT', async () => {
+    await expect(handleGetProjectTree({ path: 'does-not-exist' }, config)).rejects.toThrow(
+      FileNotFoundError,
+    );
   });
 });
