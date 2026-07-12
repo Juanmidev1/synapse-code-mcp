@@ -14,6 +14,7 @@ export function isGitRepo(root: string): boolean {
 }
 
 export function diffStat(root: string, baseRef: string): GitDiffResult {
+  assertSafeRef(baseRef);
   assertGitAvailable(root);
 
   const nameStatus = runGit(root, ['diff', '--name-status', baseRef]);
@@ -29,6 +30,7 @@ export function diffStat(root: string, baseRef: string): GitDiffResult {
 }
 
 export function getFullDiff(root: string, baseRef: string, filePaths?: string[]): string {
+  assertSafeRef(baseRef);
   assertGitAvailable(root);
 
   const args = ['diff', baseRef, ...(filePaths && filePaths.length > 0 ? ['--', ...filePaths] : [])];
@@ -59,6 +61,16 @@ function runGit(root: string, args: string[]): string {
 function assertGitAvailable(root: string): void {
   if (!isGitRepo(root)) {
     throw new GitError(`"${root}" is not a git repository.`);
+  }
+}
+
+// Git ref names can never start with "-" (enforced by `git check-ref-format`),
+// so any baseRef that does is not a ref at all — it's an attempt to smuggle a
+// git flag (e.g. "--output=<path>") into a positional argument, which could
+// otherwise make git write/overwrite an attacker-chosen file.
+function assertSafeRef(baseRef: string): void {
+  if (baseRef.startsWith('-')) {
+    throw new GitError(`Invalid base_ref "${baseRef}": refs cannot start with "-".`);
   }
 }
 

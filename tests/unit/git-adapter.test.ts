@@ -124,3 +124,22 @@ describe('getFullDiff', () => {
     expect(diff).toBe('');
   });
 });
+
+// ── Argument (flag) injection safety ───────────────────────────────────────────
+
+describe('git ref flag-injection safety', () => {
+  it('diffStat rejects a base_ref starting with "-" without spawning a process', () => {
+    expect(() => diffStat('/project', '--output=/tmp/pwned.txt')).toThrow(GitError);
+    expect(mockExec).not.toHaveBeenCalled();
+  });
+
+  it('getFullDiff rejects a base_ref starting with "-" without spawning a process', () => {
+    expect(() => getFullDiff('/project', '--upload-pack=/bin/sh')).toThrow(GitError);
+    expect(mockExec).not.toHaveBeenCalled();
+  });
+
+  it('rejects a single-dash flag-like base_ref', () => {
+    expect(() => diffStat('/project', '-x')).toThrow(GitError);
+    expect(mockExec).not.toHaveBeenCalled();
+  });
+});
