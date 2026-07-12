@@ -129,6 +129,7 @@ tests/
   integration/    Tool handler integration tests
   protocol/       End-to-end MCP protocol tests
   performance/    Benchmark suite with time and heap budgets
+  build/          Tests against the compiled dist/ output (catches source-vs-build divergence)
 ```
 
 ### The rule: tools/ are handlers, not logic
