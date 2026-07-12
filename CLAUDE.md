@@ -67,6 +67,13 @@ Drop a `synapse.config.json` at the served project root:
 ```
 
 ## Publishing
-1. Bump `version` in `package.json`
-2. `git tag vX.Y.Z && git push --tags`
-3. CI (`release.yml`) runs `npm publish` automatically on tag push
+Before tagging a new version, update ALL of the following — don't just bump the number and tag:
+1. `package.json` — bump `version`
+2. `CHANGELOG.md` — add a dated `## [X.Y.Z]` entry under `[Unreleased]` describing what shipped, and update the `[Unreleased]` compare link
+3. `README.md` — check for anything the release touches: new/changed config options (`## Configuration`), new tools or parameters (`## Tools`), the test-count badge, the `## Project structure` diagram if new files/dirs were added under `src/`
+4. `ROADMAP.md` — remove any "Planned" or "In progress" item that the release just shipped
+5. `.github/CONTRIBUTING.md` — the `## Project architecture` diagram mirrors README's; keep both in sync
+6. `git tag vX.Y.Z && git push origin main && git push origin vX.Y.Z`
+7. CI (`release.yml`) runs `npm publish` automatically on tag push
+
+Treat this as a checklist to run through explicitly on every version bump, not just when something happens to be obviously stale — docs drift silently otherwise.
