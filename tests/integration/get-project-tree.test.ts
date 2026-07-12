@@ -113,6 +113,37 @@ describe('Integration: get_project_tree', () => {
     expect(result).toContain('app.ts');
   });
 
+  it('respects extraIgnorePatterns from synapse.config.json', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'synapse-config-ignore-'));
+
+  try {
+    fs.writeFileSync(
+      path.join(tmpRoot, 'synapse.config.json'),
+      JSON.stringify({
+        extraIgnorePatterns: ['*.generated.ts'],
+      }),
+    );
+
+    fs.writeFileSync(
+      path.join(tmpRoot, 'keep.ts'),
+      'export const x = 1;',
+    );
+
+    fs.writeFileSync(
+      path.join(tmpRoot, 'test.generated.ts'),
+      'export const y = 2;',
+    );
+
+    const config = loadConfig({ root: tmpRoot });
+    const result = await handleGetProjectTree({}, config);
+
+    expect(result).toContain('keep.ts');
+    expect(result).not.toContain('test.generated.ts');
+  } finally {
+    fs.rmSync(tmpRoot, { recursive: true, force: true });
+  }
+});
+
   describe('with an ad-hoc temp fixture', () => {
     let tmpRoot: string;
 
