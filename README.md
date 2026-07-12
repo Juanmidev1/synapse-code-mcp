@@ -11,7 +11,7 @@
 [![CI](https://github.com/Juanmidev1/synapse-code-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Juanmidev1/synapse-code-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
-[![Tests: 251](https://img.shields.io/badge/tests-251%20passing-brightgreen)](#development)
+[![Tests: 263](https://img.shields.io/badge/tests-263%20passing-brightgreen)](#development)
 
 > A structural code context server that connects your local repository to AI assistants via the [Model Context Protocol](https://modelcontextprotocol.io).
 
@@ -268,9 +268,12 @@ Drop a `synapse.config.json` at your project root to override defaults for that 
 {
   "maxFileSize": 1048576,
   "maxDependencyDepth": 3,
-  "extraIgnorePatterns": ["*.generated.ts", "**/__mocks__/**"]
+  "extraIgnorePatterns": ["*.generated.ts", "**/__mocks__/**"],
+  "cacheEnabled": true
 }
 ```
+
+`cacheEnabled` (default `true`) controls the on-disk incremental index cache (`.synapse-cache/index.json`) used by `get_project_index` and `get_semantic_context` to skip re-parsing unchanged files. Set to `false` to disable it.
 
 All fields are optional. CLI flags take precedence over `synapse.config.json`.
 
