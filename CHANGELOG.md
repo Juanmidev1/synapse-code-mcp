@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.2...HEAD
+[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.3...HEAD
+
+---
+
+## [0.5.3] — 2026-07-12
+
+### Security
+
+- **Git argument injection via `base_ref`** — a `base_ref` value starting with `-` (e.g. `--output=<path>`) was passed as a bare positional argument to `git diff`, letting git itself interpret it as a flag instead of a ref. This could overwrite an arbitrary file the server process could write to. `base_ref` is now rejected outright when it starts with `-`, since no valid git ref name can ever start with that character.
+
+[0.5.3]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.2...v0.5.3
 
 ---
 
