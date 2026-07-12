@@ -11,7 +11,7 @@
 [![CI](https://github.com/Juanmidev1/synapse-code-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Juanmidev1/synapse-code-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node ≥ 18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
-[![Tests: 288](https://img.shields.io/badge/tests-288%20passing-brightgreen)](#development)
+[![Tests: 290](https://img.shields.io/badge/tests-290%20passing-brightgreen)](#development)
 
 > A structural code context server that connects your local repository to AI assistants via the [Model Context Protocol](https://modelcontextprotocol.io).
 
@@ -400,6 +400,7 @@ tests/
   integration/          Tool handler integration tests
   protocol/             End-to-end MCP protocol tests (InMemoryTransport)
   performance/          Benchmark suite with time and heap budgets
+  build/                Tests against the compiled dist/ output (catches source-vs-build divergence)
 ```
 
 ---

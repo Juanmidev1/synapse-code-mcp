@@ -1,16 +1,11 @@
 import { DependencyEdge } from '../../types/context.js';
 import { findTsConfig } from './ts-project-utils.js';
+import { loadTsMorph } from './ts-morph-loader.js';
 
 export function resolveImports(filePath: string, projectRoot: string): DependencyEdge[] {
-  let Project: typeof import('ts-morph').Project;
-
-  try {
-    // dynamic import to avoid crashing if ts-morph has an issue at startup
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    ({ Project } = require('ts-morph') as typeof import('ts-morph'));
-  } catch {
-    return [];
-  }
+  const tsMorph = loadTsMorph();
+  if (!tsMorph) return [];
+  const { Project } = tsMorph;
 
   const tsConfigPath = findTsConfig(projectRoot);
 

@@ -2,6 +2,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { FileOutline, SymbolSignature } from '../../types/context.js';
 import { findTsConfig } from './ts-project-utils.js';
+import { loadTsMorph } from './ts-morph-loader.js';
 import { toRelative, detectLanguage } from '../../utils/path-utils.js';
 
 export function extractOutline(absPath: string, root: string): FileOutline {
@@ -16,14 +17,11 @@ export function extractOutline(absPath: string, root: string): FileOutline {
 }
 
 function extractTsOutline(absPath: string, relativePath: string, root: string): FileOutline {
-  let Project: typeof import('ts-morph').Project;
-
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    ({ Project } = require('ts-morph') as typeof import('ts-morph'));
-  } catch {
+  const tsMorph = loadTsMorph();
+  if (!tsMorph) {
     return extractGenericOutline(absPath, relativePath, 'typescript');
   }
+  const { Project } = tsMorph;
 
   try {
     const tsConfigPath = findTsConfig(root);

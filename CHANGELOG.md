@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.3...HEAD
+[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.4...HEAD
+
+---
+
+## [0.5.4] — 2026-07-12
+
+### Fixed
+
+- **`ts-morph` never actually loaded in the published package** — `outline-extractor.ts` and `ts-resolver.ts` called bare `require('ts-morph')` inside a try/catch, which silently fails with `ReferenceError: require is not defined` in a real Node ESM build (this package ships `"type": "module"`). Both call sites were catching that error every single time and falling back to a much weaker regex-based analysis, meaning `get_semantic_context`'s dependency-graph auto-bundling always reported zero local dependencies, and `get_project_index`/`get_semantic_context outline_only` never returned interface properties, method parameter types, or other ts-morph-only detail — in every released version through v0.5.3. Fixed by loading `ts-morph` via `createRequire(import.meta.url)`, Node's documented mechanism for synchronously loading a CommonJS package from ESM. A new `tests/build/` suite now imports directly from the compiled `dist/` output (not `src/`) to catch this class of source-vs-build divergence in the future, and CI now runs the build before tests.
+
+[0.5.4]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.3...v0.5.4
 
 ---
 
