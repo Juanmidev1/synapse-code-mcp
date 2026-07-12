@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import { buildProjectIndex } from '../../src/core/analysis/project-indexer.js';
 import { loadConfig } from '../../src/config/index.js';
+import { PathEscapeError } from '../../src/utils/errors.js';
 
 const FIXTURE_ROOT = path.resolve('tests/fixtures/integration-project');
 const config = loadConfig({ root: FIXTURE_ROOT, cacheEnabled: false });
@@ -85,6 +86,18 @@ describe('buildProjectIndex — integration-project fixture', () => {
       const topLevel = file.symbols.filter((s) => s.kind !== 'method' && s.kind !== 'variable');
       expect(topLevel.every((s) => s.exported)).toBe(true);
     }
+  });
+
+  it('rejects a file_pattern that escapes the project root', async () => {
+    await expect(
+      buildProjectIndex(FIXTURE_ROOT, config, { filePattern: '../../../../etc/*' }),
+    ).rejects.toThrow(PathEscapeError);
+  });
+
+  it('rejects a file_pattern with traversal pointing at a real outside file', async () => {
+    await expect(
+      buildProjectIndex(FIXTURE_ROOT, config, { filePattern: '../../outside/*.ts' }),
+    ).rejects.toThrow(PathEscapeError);
   });
 });
 

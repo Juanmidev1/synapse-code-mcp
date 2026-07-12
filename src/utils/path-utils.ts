@@ -30,6 +30,24 @@ export function resolveAndValidate(root: string, userPath: string): string {
   }
 }
 
+// Validates that a glob pattern (e.g. "src/**/*.ts") cannot escape root via
+// literal ".." segments. path.join() collapses ".." syntactically even with
+// wildcards still present in the tail, so this is a cheap containment check
+// performed before the pattern is ever handed to a glob engine (fast-glob or
+// ripgrep's --glob) — both of which will happily match outside root otherwise.
+export function validateGlobPattern(root: string, pattern: string): void {
+  if (pattern.includes('\0')) {
+    throw new PathEscapeError(pattern, root);
+  }
+
+  const absRoot = path.resolve(root).replace(/\\/g, '/');
+  const joined = path.join(absRoot, pattern).replace(/\\/g, '/');
+
+  if (!joined.startsWith(`${absRoot}/`) && joined !== absRoot) {
+    throw new PathEscapeError(pattern, root);
+  }
+}
+
 export function toRelative(root: string, absPath: string): string {
   return path.relative(path.resolve(root), absPath);
 }

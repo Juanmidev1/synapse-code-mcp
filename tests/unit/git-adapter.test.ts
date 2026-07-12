@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { isGitRepo, diffStat, getFullDiff } from '../../src/core/git/git-adapter.js';
 import { GitError } from '../../src/utils/errors.js';
 
 vi.mock('node:child_process', () => ({
-  execSync: vi.fn(),
+  execFileSync: vi.fn(),
 }));
 
-const mockExec = vi.mocked(execSync);
+const mockExec = vi.mocked(execFileSync);
 
 afterEach(() => {
   vi.clearAllMocks();

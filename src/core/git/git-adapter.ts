@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { ChangedFile, GitDiffResult } from '../../types/git.js';
 import { GitError } from '../../utils/errors.js';
 
@@ -6,7 +6,7 @@ const DIFF_SIZE_LIMIT = 50 * 1024; // 50 KB
 
 export function isGitRepo(root: string): boolean {
   try {
-    execSync(`git -C "${root}" rev-parse --git-dir`, { stdio: 'pipe' });
+    execFileSync('git', ['-C', root, 'rev-parse', '--git-dir'], { stdio: 'ignore' });
     return true;
   } catch {
     return false;
@@ -16,8 +16,8 @@ export function isGitRepo(root: string): boolean {
 export function diffStat(root: string, baseRef: string): GitDiffResult {
   assertGitAvailable(root);
 
-  const nameStatus = runGit(root, `diff --name-status ${baseRef}`);
-  const diffStatOutput = runGit(root, `diff --stat ${baseRef}`);
+  const nameStatus = runGit(root, ['diff', '--name-status', baseRef]);
+  const diffStatOutput = runGit(root, ['diff', '--stat', baseRef]);
 
   const changedFiles = parseNameStatus(nameStatus);
   mergeStatCounts(changedFiles, diffStatOutput);
@@ -28,11 +28,11 @@ export function diffStat(root: string, baseRef: string): GitDiffResult {
   return { baseRef, changedFiles, totalAdditions, totalDeletions };
 }
 
-export function getFullDiff(root: string, baseRef: string, filePath?: string): string {
+export function getFullDiff(root: string, baseRef: string, filePaths?: string[]): string {
   assertGitAvailable(root);
 
-  const fileArg = filePath ? ` -- "${filePath}"` : '';
-  const output = runGit(root, `diff ${baseRef}${fileArg}`);
+  const args = ['diff', baseRef, ...(filePaths && filePaths.length > 0 ? ['--', ...filePaths] : [])];
+  const output = runGit(root, args);
 
   if (output.length > DIFF_SIZE_LIMIT) {
     const truncated = output.slice(0, DIFF_SIZE_LIMIT);
@@ -44,9 +44,9 @@ export function getFullDiff(root: string, baseRef: string, filePath?: string): s
 
 // ── Internal helpers ─────────────────────────────────────────────────────────
 
-function runGit(root: string, args: string): string {
+function runGit(root: string, args: string[]): string {
   try {
-    return execSync(`git -C "${root}" ${args}`, {
+    return execFileSync('git', ['-C', root, ...args], {
       stdio: 'pipe',
       encoding: 'utf-8',
       maxBuffer: 10 * 1024 * 1024,

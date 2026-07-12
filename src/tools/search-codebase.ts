@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { SynapseConfig } from '../types/config.js';
 import { search } from '../core/search/searcher.js';
+import { validateGlobPattern } from '../utils/path-utils.js';
 
 export const SearchCodebaseSchema = z.object({
   query: z.string().min(1).describe('Text or regex pattern to search for.'),
@@ -23,7 +24,10 @@ export async function handleSearchCodebase(
     caseSensitive: input.case_sensitive ?? false,
     maxResults: input.max_results ?? config.maxSearchResults,
   };
-  if (input.file_pattern !== undefined) searchParams.filePattern = input.file_pattern;
+  if (input.file_pattern !== undefined) {
+    validateGlobPattern(config.root, input.file_pattern);
+    searchParams.filePattern = input.file_pattern;
+  }
   const result = await search(searchParams);
 
   if (result.matches.length === 0) {

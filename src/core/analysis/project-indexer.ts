@@ -2,7 +2,7 @@ import path from 'node:path';
 import fg from 'fast-glob';
 import { SymbolSignature } from '../../types/context.js';
 import { SynapseConfig } from '../../types/config.js';
-import { toRelative } from '../../utils/path-utils.js';
+import { toRelative, validateGlobPattern } from '../../utils/path-utils.js';
 import { CacheStore, getCachedOutline, loadCacheStore, pruneAndSave } from './index-cache.js';
 
 export interface FileIndex {
@@ -47,6 +47,8 @@ export async function buildProjectIndex(
   config: SynapseConfig,
   opts?: { includeNonExported?: boolean; filePattern?: string },
 ): Promise<ProjectIndex> {
+  if (opts?.filePattern) validateGlobPattern(root, opts.filePattern);
+
   const globPattern = opts?.filePattern
     ? path.join(root, opts.filePattern).replace(/\\/g, '/')
     : `${root.replace(/\\/g, '/')}/**/*.{${SOURCE_EXTENSIONS.join(',')}}`;
