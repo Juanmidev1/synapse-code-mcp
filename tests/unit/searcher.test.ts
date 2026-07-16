@@ -11,6 +11,7 @@ describe('searcher', () => {
       query: 'greet',
       isRegex: false,
       caseSensitive: false,
+      maxFileSize: 512 * 1024,
       maxResults: 50,
     });
 
@@ -24,6 +25,7 @@ describe('searcher', () => {
       query: 'THIS_STRING_DOES_NOT_EXIST_IN_FIXTURES_XYZ',
       isRegex: false,
       caseSensitive: false,
+      maxFileSize: 512 * 1024,
       maxResults: 50,
     });
 
@@ -36,6 +38,7 @@ describe('searcher', () => {
       query: 'greet',
       isRegex: false,
       caseSensitive: false,
+      maxFileSize: 512 * 1024,
       maxResults: 50,
       filePattern: '**/*.ts',
     });

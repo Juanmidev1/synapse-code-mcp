@@ -23,6 +23,7 @@ export async function handleSearchCodebase(
     isRegex: input.is_regex ?? false,
     caseSensitive: input.case_sensitive ?? false,
     maxResults: input.max_results ?? config.maxSearchResults,
+    maxFileSize: config.maxFileSize,
   };
   if (input.file_pattern !== undefined) {
     validateGlobPattern(config.root, input.file_pattern);
