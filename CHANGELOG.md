@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.4...HEAD
+[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.5...HEAD
+
+---
+
+## [0.5.5] — 2026-07-16
+
+### Fixed
+
+- **Stale index cache across the v0.5.4 upgrade** — `.synapse-cache/index.json` files written by any version through v0.5.3 (when `ts-morph` never actually loaded, see 0.5.4 below) were still accepted as valid after upgrading, so already-cached files kept serving the old, weaker regex-based outlines/dependency graphs instead of being re-analyzed with the now-working `ts-morph` path. Bumped the cache schema version so any pre-0.5.4 cache is discarded on first read and every file is re-analyzed with accurate results.
+
+[0.5.5]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.4...v0.5.5
 
 ---
 
