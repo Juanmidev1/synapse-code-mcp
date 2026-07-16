@@ -5,7 +5,7 @@ import { FileOutline } from '../../types/context.js';
 import { toRelative } from '../../utils/path-utils.js';
 import { extractOutline } from './outline-extractor.js';
 
-const CACHE_VERSION = 1;
+const CACHE_VERSION = 2;
 const CACHE_DIR = '.synapse-cache';
 const CACHE_FILE = 'index.json';
 

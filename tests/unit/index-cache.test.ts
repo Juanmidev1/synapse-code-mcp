@@ -40,7 +40,7 @@ describe('index-cache', () => {
     const cacheFile = path.join(tmpDir, '.synapse-cache', 'index.json');
     expect(fs.existsSync(cacheFile)).toBe(true);
     const parsed = JSON.parse(fs.readFileSync(cacheFile, 'utf-8')) as CacheStore;
-    expect(parsed.version).toBe(1);
+    expect(parsed.version).toBe(2);
     expect(Object.keys(parsed.entries)).toHaveLength(1);
   });
 
@@ -108,7 +108,7 @@ describe('index-cache', () => {
     const parsed = JSON.parse(
       fs.readFileSync(path.join(cacheDir, 'index.json'), 'utf-8'),
     ) as CacheStore;
-    expect(parsed.version).toBe(1);
+    expect(parsed.version).toBe(2);
   });
 
   it('schema version mismatch is treated as an empty store', () => {
@@ -121,6 +121,31 @@ describe('index-cache', () => {
 
     const store = loadCacheStore(tmpDir, { cacheEnabled: true });
     expect(store.entries).toEqual({});
+  });
+
+  it('cache written by the pre-fix schema (version 1) is discarded and re-analyzed', () => {
+    const cacheDir = path.join(tmpDir, '.synapse-cache');
+    fs.mkdirSync(cacheDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(cacheDir, 'index.json'),
+      JSON.stringify({
+        version: 1,
+        entries: {
+          'sample.ts': {
+            hash: 'stale',
+            mtimeMs: 0,
+            size: 0,
+            outline: { relativePath: 'sample.ts', language: 'typescript', symbols: [] },
+          },
+        },
+      }),
+    );
+
+    const store = loadCacheStore(tmpDir, { cacheEnabled: true });
+    expect(store.entries).toEqual({});
+
+    const outline = getCachedOutline(filePath, tmpDir, { cacheEnabled: true }, store);
+    expect(outline.symbols.some((s) => s.name === 'foo')).toBe(true);
   });
 
   it('cacheEnabled:false bypasses the cache entirely', () => {

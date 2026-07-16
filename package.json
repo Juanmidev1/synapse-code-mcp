@@ -1,6 +1,6 @@
 {
   "name": "synapse-code-mcp",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "MCP server for code intelligence — semantic context, dependency graphs, and compressed symbol indexes for TypeScript/JavaScript, plus git-aware diffs and fast search. Zero external dependencies: no vector database, no embedding API, fully local.",
   "type": "module",
   "main": "dist/index.js",
