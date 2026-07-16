@@ -29,6 +29,7 @@ export interface SearchParams {
   filePattern?: string;
   caseSensitive: boolean;
   maxResults: number;
+  maxFileSize: number;
   ig?: import('ignore').Ignore;
 }
 

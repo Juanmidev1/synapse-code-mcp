@@ -62,3 +62,13 @@ export class InvalidRegexError extends SynapseError {
     this.name = 'InvalidRegexError';
   }
 }
+
+export class SearchTimeoutError extends SynapseError {
+  constructor(query: string, timeoutMs: number) {
+    super(
+      `Search for "${query}" timed out after ${timeoutMs}ms — the pattern may be catastrophically slow (ReDoS). Try a simpler pattern or narrow file_pattern.`,
+      'SEARCH_TIMEOUT',
+    );
+    this.name = 'SearchTimeoutError';
+  }
+}

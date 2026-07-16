@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.5...HEAD
+[Unreleased]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.6...HEAD
+
+---
+
+## [0.5.6] — 2026-07-16
+
+### Security
+
+- **ReDoS denial-of-service in `search_codebase`** — the pure-JS fallback used when `ripgrep` isn't installed (`native-adapter.ts`) read every matched file with no size limit and ran the user-supplied regex against each line with JS's backtracking engine, with no protection against catastrophic backtracking. A pattern like `(a+)+$` against as little as 45 repeated characters could hang the single-threaded stdio server indefinitely — the whole process, not just that one request, since `RegExp.exec()` blocks the main event loop and cannot be pre-empted once started. Fixed by moving the matching loop into a `worker_threads` worker with a hard 10-second wall-clock timeout (`worker.terminate()` on expiry, returning a new `SEARCH_TIMEOUT` error instead of hanging), plus enforcing `maxFileSize` before reading each file as defense-in-depth against unbounded memory use.
+
+[0.5.6]: https://github.com/Juanmidev1/synapse-code-mcp/compare/v0.5.5...v0.5.6
 
 ---
 
